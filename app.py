@@ -3,24 +3,25 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 import torch
 import re
 
-device = "cuda"
+device = "cuda" #เลือกใช้ GPU
 
-model_id = "nectec/Pathumma-llm-text-1.0.0"
+model_id = "nectec/Pathumma-llm-text-1.0.0" #เลือกโมเดลที่ต้องการใช้งาน Pathumma-llm-text-1.0.0
+#ย่อส่วนของโมเดลเพื่อให้ทำงานได้เร็วขึ้น
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_quant_type="nf4",
     bnb_4bit_compute_dtype=torch.bfloat16
 )
+#โหลดโมเดลและโทเคนไนเซอร์จากไลบรารี Hugging Face Transformers
 model = AutoModelForCausalLM.from_pretrained(model_id, quantization_config=bnb_config)
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 
-
+#ฟังก์ชันสำหรับสร้าง attention mask
 def get_attention_mask(inputs):
     return (inputs != tokenizer.pad_token_id).type(torch.long)
 
-
+#ฟังก์ชันสำหรับสร้างการสนทนาของแชทบอท
 def chatbot(gender, age, weight, heigth, plan, day, level, question):
-    global llm_response
     prompt = f"แนะนำการออกกำลังกายสำหรับ{gender} อายุ {age} ปี น้ำหนัก{weight} กิโลกรัม ส่วนสูง{heigth} เซนติเมตร ที่มีแผนการออกกำลังกาย {plan} มีเวลาออกกำลังกาย {day} วันต่อสัปดาห์ ระดับความเชี่ยวชาญ {level} และมีคำถามเพิ่มเติมว่า {question}"
 
     messages = [
@@ -50,13 +51,13 @@ def chatbot(gender, age, weight, heigth, plan, day, level, question):
     result = re.sub(pattern, "", text, flags=re.DOTALL)
     print("response: \n")
     print(response)
-    print("\n\nresponse: \n")
+    print("\n\nresult: \n")
     print(result)
     
     return result
 
 
-
+#สร้างอินเตอร์เฟซสำหรับแชทบอท
 interface = gr.Interface(
     fn=chatbot,
     inputs=[
@@ -75,5 +76,6 @@ interface = gr.Interface(
     elem_id="chat-container"
 )
 
+#เริ่มการทำงานของแชทบอท
 if __name__ == "__main__":
   interface.launch()
