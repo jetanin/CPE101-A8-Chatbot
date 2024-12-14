@@ -25,7 +25,7 @@ def chatbot(gender, age, weight, heigth, plan, day, level, question):
     prompt = f"แนะนำการออกกำลังกายสำหรับ{gender} อายุ {age} ปี น้ำหนัก{weight} กิโลกรัม ส่วนสูง{heigth} เซนติเมตร ที่มีแผนการออกกำลังกาย {plan} มีเวลาออกกำลังกาย {day} วันต่อสัปดาห์ ระดับความเชี่ยวชาญ {level} และมีคำถามเพิ่มเติมว่า {question}"
 
     messages = [
-        {"role": "system", "content": f"คุณเป็นผู้เชี่ยวชาญด้านการออกกำลังกาย คุณให้คำตอบที่ครอบคลุมและให้ข้อมูลต่อคำถามของผู้ใช้ {prompt}"},
+        {"role": "system", "content": f"คุณเป็นผู้เชี่ยวชาญด้านการออกกำลังกาย คุณให้คำตอบที่ครอบคลุมและให้ข้อมูลต่อคำถามของผู้ใช้อย่างละเอียด {prompt}"},
     ]
 
     text = tokenizer.apply_chat_template(
@@ -71,8 +71,8 @@ interface = gr.Interface(
         gr.Textbox(label="คำถามเพิ่มเติม:"),
     ],
     outputs="text",
-    title="Exercise Consultant Chatbot",
-    description="Get personalized exercise recommendations from your AI assistant!",
+    title="TinTin",
+    description="สอบถามข้อมูลการออกกำลังกายจากผู้ช่วยส่วนตัวของคุณ!",
     elem_id="chat-container"
 )
 
